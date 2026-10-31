@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberNET // Squad Terminal</title>
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@500;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://kit.fontawesome.com/4018d9f845.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <header>
+        <div class="logo">CyberNET<span>//</span>SQUAD</div>
+        <nav>
+            <a href="#control-center">Central</a>
+            <a href="#alerts">Precauciones</a>
+        </nav>
+    </header>
+
+    <main>
+        <div id="control-center" class="terminal-grid">
+
+            <section id="tasks" class="section">
+                <div class="cyber-card">
+                    <div class="card-title">&gt; Buffer_Grupal_Tareas</div>
+                    <div class="task-system">
+                        <div class="task-input-group">
+                            <input type="text" id="task-input" class="cyber-input" placeholder="Título de la Actividad..." autocomplete="off">
+                            <textarea id="task-details" class="cyber-input textarea-input" placeholder="Detalles específicos e instrucciones para el grupo..." autocomplete="off"></textarea>
+                            <input type="hidden" id="task-date">
+                            <button id="add-btn" class="cyber-btn">Inyectar Asignación</button>
+                        </div>
+                        <ul id="task-container" class="task-list"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="calendar-section" class="section">
+                <div class="cyber-card pink-variant">
+                    <div class="card-title">&gt; Calendario_Entregas</div>
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button id="prev-month" class="cal-btn">&lt;</button>
+                            <span id="month-year-display"></span>
+                            <button id="next-month" class="cal-btn">&gt;</button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <div>Dom</div><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div>
+                        </div>
+                        <div id="calendar-days" class="calendar-days"></div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <section id="alerts" class="section">
+            <div class="console-log warning-box">
+                <div class="card-title pink-text">&gt; PROTOCOLO_PRECAUCIÓN</div>
+                <div class="console-text" id="notification-text">SISTEMA COMPARTIDO ACTIVO // MONITOREANDO PRÓXIMAS ENTREGAS...</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-logo">CyberNET<span>//</span>2026</div>
+                <p>Estudiante de Liceo & Desarrollador Front-End Autodidacta</p>
+            </div>
+            <div class="footer-social">
+                <a href="https://github.com" class="social-box gh" target="_blank">
+                    <span class="social-title">GitHub</span>
+                    <span class="social-user">@victorrios2010s15-cmyk</span>
+                </a>
+                <a href="#" class="social-box tw" target="_blank">
+                    <span class="social-title">X_Twitter</span>
+                    <span class="social-user">@cybernet_dev</span>
+                </a>
+                <a href="mailto:tu-correo@dominio.com" class="social-box ml">
+                    <span class="social-title">Correo</span>
+                    <span class="social-user">Enviar Mail Directo</span>
+                </a>
+            </div>
+            <div class="footer-rights">
+                &copy; 2026 Víctor Ríos. Todos los derechos reservados. El código limpio habla por sí mismo.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+    <script src="./app.js"></script>
+
+    <div id="cyber-alert-modal" class="alert-modal-overlay">
+        <div class="alert-modal-content">
+            <div class="alert-modal-header">&gt; SYSTEM_ERROR</div>
+            <div id="cyber-alert-message" class="alert-modal-body"></div>
+            <button id="cyber-alert-btn" class="cyber-btn alert-modal-btn">Aceptar</button>
+        </div>
+    </div>
+
+</body>
+</html>
