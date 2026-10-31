@@ -9,9 +9,9 @@
       "purpose": "any maskable"
     }
   ],
-  "start_url": "/Cyber-Task/",
+  "start_url": "./index.html",
+  "display": "standalone",
   "background_color": "#0b0d15",
   "theme_color": "#06b6d4",
-  "display": "standalone",
   "orientation": "portrait"
 }

@@ -1,9 +1,9 @@
 const CACHE_NAME = "cyber-task-v1";
 const ASSETS = [
-  "/Cyber-Task/",
-  "/Cyber-Task/index.html",
-  "/Cyber-Task/style.css",
-  "/Cyber-Task/script.js"
+  "./",
+  "./index.html",
+  "./style.css",
+  "./script.js"
 ];
 
 self.addEventListener("install", (e) => {
