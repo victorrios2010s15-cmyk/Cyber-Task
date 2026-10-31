@@ -1,17 +1,19 @@
+import { initializeApp } from "https://gstatic.com";
+import { getDatabase, ref, push, onValue, update, remove } from "https://gstatic.com";
+
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "TU_AUTH_DOMAIN",
-    projectId: "TU_PROJECT_ID",
-    storageBucket: "TU_STORAGE_BUCKET",
-    messagingSenderId: "TU_MESSAGING_SENDER_ID",
-    appId: "TU_APP_ID"
+    apiKey: "AIzaSyC6yPS6Bhe8PE_-4NH_mXpXCp3zHO24skE",
+    authDomain: "cyber-task-66d1f.firebaseapp.com",
+    databaseURL: "https://cyber-task-66d1f-default-rtdb.firebaseio.com",
+    projectId: "cyber-task-66d1f",
+    storageBucket: "cyber-task-66d1f.firebasestorage.app",
+    messagingSenderId: "1025274600073",
+    appId: "1:1025274600073:web:e6c585f689c61dfbe5c458"
 };
 
-let db = null;
-if (firebaseConfig.apiKey !== "TU_API_KEY") {
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
-}
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+const tareasRef = ref(database, "tareas");
 
 const taskInput = document.getElementById('task-input');
 const taskDetails = document.getElementById('task-details');
@@ -27,28 +29,28 @@ const nextMonthBtn = document.getElementById('next-month');
 
 let currentDate = new Date();
 let selectedDateStr = "";
-let localTasks = JSON.parse(localStorage.getItem('squadTasks')) || [];
+let tareasGlobales = {};
 
 const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
 function inicializarApp() {
-    renderizarCalendario();
-    
-    if (db) {
-        db.collection('tareas').orderBy('deadline').onSnapshot(snapshot => {
-            taskContainer.innerHTML = '';
-            let tareas = [];
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                renderizarTarea(doc.id, data.text, data.details, data.deadline, data.completed);
-                if (!data.completed) tareas.push(data);
-            });
-            verificarPrecauciones(tareas);
-            renderizarCalendario();
+    onValue(tareasRef, (snapshot) => {
+        taskContainer.innerHTML = '';
+        tareasGlobales = snapshot.exists() ? snapshot.val() : {};
+        
+        let listaTareasActivas = [];
+        
+        Object.keys(tareasGlobales).forEach((id) => {
+            const data = tareasGlobales[id];
+            renderizarTarea(id, data.text, data.details, data.deadline, data.completed);
+            if (!data.completed) {
+                listaTareasActivas.push(data);
+            }
         });
-    } else {
-        actualizarListaLocal();
-    }
+        
+        verificarPrecauciones(listaTareasActivas);
+        renderizarCalendario();
+    });
 }
 
 function renderizarCalendario() {
@@ -67,8 +69,6 @@ function renderizarCalendario() {
         calendarDays.appendChild(emptyDiv);
     }
 
-    const tareasActivas = db ? [] : localTasks.filter(t => !t.completed);
-
     for (let dia = 1; dia <= totalDias; dia++) {
         const dayDiv = document.createElement('div');
         dayDiv.className = 'cal-day';
@@ -82,10 +82,9 @@ function renderizarCalendario() {
             dayDiv.classList.add('selected');
         }
 
-        if (db) {
-        } else {
-            const tieneEntrega = tareasActivas.some(t => t.deadline === fechaStr);
-            if (tieneEntrega) dayDiv.classList.add('has-deadline');
+        const tieneEntrega = Object.values(tareasGlobales).some(t => t.deadline === fechaStr && !t.completed);
+        if (tieneEntrega) {
+            dayDiv.classList.add('has-deadline');
         }
 
         dayDiv.addEventListener('click', () => {
@@ -171,23 +170,13 @@ function renderizarTarea(id, text, details, deadline, completed) {
     `;
 
     li.querySelector('.action-done').addEventListener('click', () => {
-        if (db) {
-            db.collection('tareas').doc(id).update({ completed: !completed });
-        } else {
-            localTasks[id].completed = !localTasks[id].completed;
-            localStorage.setItem('squadTasks', JSON.stringify(localTasks));
-            actualizarListaLocal();
-        }
+        const tareaEspecificaRef = ref(database, `tareas/${id}`);
+        update(tareaEspecificaRef, { completed: !completed });
     });
 
     li.querySelector('.action-delete').addEventListener('click', () => {
-        if (db) {
-            db.collection('tareas').doc(id).delete();
-        } else {
-            localTasks.splice(id, 1);
-            localStorage.setItem('squadTasks', JSON.stringify(localTasks));
-            actualizarListaLocal();
-        }
+        const tareaEspecificaRef = ref(database, `tareas/${id}`);
+        remove(tareaEspecificaRef);
     });
 
     taskContainer.appendChild(li);
@@ -203,28 +192,25 @@ addBtn.addEventListener('click', () => {
         return;
     }
 
-    if (db) {
-        db.collection('tareas').add({ text, details, deadline: date, completed: false });
-    } else {
-        localTasks.push({ text, details, deadline: date, completed: false });
-        localStorage.setItem('squadTasks', JSON.stringify(localTasks));
-        actualizarListaLocal();
-    }
+    const nuevaTarea = {
+        text: text,
+        details: details,
+        deadline: date,
+        completed: false
+    };
+
+    push(tareasRef, nuevaTarea);
 
     taskInput.value = '';
     taskDetails.value = '';
 });
 
-function actualizarListaLocal() {
-    taskContainer.innerHTML = '';
-    localTasks = JSON.parse(localStorage.getItem('squadTasks')) || [];
-    localTasks.forEach((t, i) => renderizarTarea(i, t.text, t.details, t.deadline, t.completed));
-    verificarPrecauciones(localTasks.filter(t => !t.completed));
-    renderizarCalendario();
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js")
+            .then((reg) => console.log("Terminal CyberNET Sincronizada", reg.scope))
+            .catch((err) => console.log("Fallo en sincronización de entorno", err));
+    });
 }
 
-if ("Notification" in window && Notification.permission === "default") {
-    Notification.requestPermission();
-}
-
-document.addEventListener('DOMContentLoaded', inicializarApp);
+inicializarApp();
