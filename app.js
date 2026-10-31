@@ -213,4 +213,18 @@ if ("serviceWorker" in navigator) {
     });
 }
 
+function solicitarPermisoNotificaciones() {
+    if ("Notification" in window) {
+        Notification.requestPermission().then((permiso) => {
+            if (permiso === "granted") {
+                console.log("Protocolo de alertas autorizado por el usuario.");
+            } else {
+                console.log("Protocolo de alertas denegado.");
+            }
+        });
+    }
+}
+
+window.addEventListener("load", solicitarPermisoNotificaciones);
+
 inicializarApp();

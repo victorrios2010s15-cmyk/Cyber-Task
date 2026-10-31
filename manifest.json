@@ -1,0 +1,17 @@
+{
+  "short_name": "CyberTask",
+  "name": "CyberNET Squad Terminal",
+  "icons": [
+    {
+      "src": "https://icons8.com",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/Cyber-Task/",
+  "background_color": "#0b0d15",
+  "theme_color": "#06b6d4",
+  "display": "standalone",
+  "orientation": "portrait"
+}
