@@ -30,7 +30,7 @@ self.addEventListener("push", (e) => {
     body: datos.mensaje,
     icon: "https://icons8.com",
     badge: "https://icons8.com",
-    vibrate:200,
+    vibrate: [200, 100, 200],
     data: {
       url: "/Cyber-Task/"
     }
