@@ -3,8 +3,8 @@ import { getDatabase, ref, push, onValue, update, remove } from "https://gstatic
 
 const firebaseConfig = {
     apiKey: "AIzaSyC6yPS6Bhe8PE_-4NH_mXpXCp3zHO24skE",
-    authDomain: "cyber-task-66d1f.firebaseapp.com",
-    databaseURL: "https://cyber-task-66d1f-default-rtdb.firebaseio.com",
+    authDomain: "://firebaseapp.com",
+    databaseURL: "https://firebaseio.com",
     projectId: "cyber-task-66d1f",
     storageBucket: "cyber-task-66d1f.firebasestorage.app",
     messagingSenderId: "1025274600073",
@@ -34,6 +34,7 @@ let tareasGlobales = {};
 const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
 function inicializarApp() {
+    renderizarCalendario();
     onValue(tareasRef, (snapshot) => {
         taskContainer.innerHTML = '';
         tareasGlobales = snapshot.exists() ? snapshot.val() : {};
